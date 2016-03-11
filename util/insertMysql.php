@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * requires TIGER/Line Geography shape files
+ * https://www.census.gov/geo/maps-data/data/tiger-line.html
+ * ftp://ftp2.census.gov/geo/tiger/TIGER2015/STATE/
+ */
 $common_php_dir = realpath ( '../../../php_common' );
 $common_autoload_file = $common_php_dir . '/autoload.php';
 require ($common_autoload_file);
