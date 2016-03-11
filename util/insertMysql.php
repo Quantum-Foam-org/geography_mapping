@@ -105,8 +105,7 @@ class InsertTigerState {
 			}
 			unset ( $row, $values );
 		} catch ( RuntimeException $e ) {
-			echo $e->getMessage ();
-			exit ( $e->severity );
+			exit ( \common\logging\Logger::obj()->writeException($e));
 		} finally {
 			unset ( $f, $md5, $fileName );
 		}
