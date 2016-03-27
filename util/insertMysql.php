@@ -169,10 +169,12 @@ class InsertTigerState {
                 \common\logging\Logger::obj()->write('Running command: ' . $cmd);
                 \passthru($cmd, $ret);
                 $output = \trim(\ob_get_contents());
-                if ($ret >= 0 && \preg_match('/\s\sSTATEFP\s\(String\)\s=\s(\d+)/', $output, $matches)) {
-                    var_dump($output, $matches);die;
+                if ($ret >= 0 && \preg_match('/\s\sSTATEFP\s\(String\)\s=\s(\d+)/', $output, $matchesStatefp) === 1 && \preg_match('/((MULTIPOLYGON|POLYGON)\s\(.*\))/', $output, $matchesPolygon) === 1) {
+                    
                     \common\logging\Logger::obj()->write('Writing Feature: ' . $fid);
-                    $tmpCsvFile->fputcsv([$matches[1], $output]);
+                    $tmpCsvFile->fputcsv([$matchesStatefp[1], $matchesPolygon[1]]);
+                    
+                    unset($matchesPolygon, $matchesStatefp);
                 } else {
                     echo "Unable to write feature $fid to output file\n";
                 }
@@ -182,6 +184,8 @@ class InsertTigerState {
             echo "Unable to determine the feature count of the shape file\n";
             exit((int) ('-' . __LINE__));
         }
+        
+        unset($output);
         
         return $ret;
     }
@@ -227,8 +231,8 @@ class InsertTigerState {
 
             \common\logging\Logger::obj()->write("State table has been updated: " . (int) $db->commit());
             
-            unset($f, $row, $headers, $sth, $values);
-
+            unset($f, $row, $headers, $values);
+            
             // populate the state boundary table
             $f = new \SplFileObject($tmpCsvFileBound, 'r');
             $f->setFlags(\SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
@@ -243,7 +247,7 @@ class InsertTigerState {
                 $placeholders = ['id' => '?', 'lat_long' => 'ST_GeomFromText(?)'];
                 
                 try {
-                    $sth = $db->insert($this->sqlOpt->table_boundaries, $values, $placeholders);
+                    $db->insert($this->sqlOpt->table_boundaries, $values, $placeholders);
                 } catch (\RuntimeException $e) {
                     $db->rollBack();
                     \common\logging\Logger::obj()->writeException($e);
@@ -254,7 +258,7 @@ class InsertTigerState {
             }
             \common\logging\Logger::obj()->write("State Boundaries table has been updated: " . (int) $db->commit());
 
-            unset($f, $row, $headers, $sth, $values);
+            unset($f, $row, $headers, $values);
         } catch (\RuntimeException $e) {
             exit((int) '-' . \common\logging\Logger::obj()->writeException($e));
         } finally {
