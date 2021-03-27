@@ -10,8 +10,8 @@ This requires the following:
 
 1.) 2015 Tiger line files from the US Census.
 
-3.) My PHP Common and PHP CLI projects
+2.) My PHP Common and PHP CLI projects
 
-5.a.) git clone https://github.com/malaimo2900/php_common
+2.a.) git clone https://github.com/malaimo2900/php_common
 
-7.b.) git clone https://github.com/malaimo2900/php_cli
+2.b.) git clone https://github.com/malaimo2900/php_cli
