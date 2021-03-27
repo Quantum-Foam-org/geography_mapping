@@ -6,4 +6,9 @@ Download the National File.
 
 Then run createStateList.php  with the national File.  You will get all state codes.
 
-This also requires the 2015 Tiger line files from the US Census.
+This requires the following:
+
+1.) 2015 Tiger line files from the US Census.
+2.) My PHP Common and PHP CLI projects
+2.a.) git clone https://github.com/malaimo2900/php_common
+2.b.) git clone https://github.com/malaimo2900/php_cli
